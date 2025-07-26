@@ -2,9 +2,9 @@
 Contributors: pandamusrex
 Donate link: https://pandamusrex.com/
 Tags: woocommerce
-Requires at least: 4.7
-Tested up to: 5.4
-Stable tag: 1.1
+Requires at least: 6.4.3
+Tested up to: 6.8.2
+Stable tag: 1.1.0
 Requires PHP: 7.0
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -23,5 +23,5 @@ Yes!
 
 == Changelog ==
 
-= 1.1 =
+= 1.1.0 =
 * Initial release
