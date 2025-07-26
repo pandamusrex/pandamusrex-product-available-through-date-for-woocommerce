@@ -44,7 +44,7 @@ class PandamusRex_Available_Through {
     }
   
     function add_meta_box() {
-        add_meta_box( 'available_through_sectionid', __( 'Available Through' ), array( $this, 'meta_box' ), 'product', 'side', 'high' );
+        add_meta_box( 'available_through_sectionid', __( 'Available Through', 'available-through' ), array( $this, 'meta_box' ), 'product', 'side', 'high' );
     }
     
     function is_product_purchaseable( $productID ) {
@@ -76,15 +76,15 @@ class PandamusRex_Available_Through {
 
         $available_through_date = get_post_meta( $product->ID, '_available_through_date', true);
 
-        echo esc_html__( 'Allow purchasing through' );
+        echo esc_html__( 'Allow purchasing through', 'available-through' );
         echo '<br><br>';
         echo '<input type="text" id="_available_through_date" name="_available_through_date" value="' . esc_attr( $available_through_date ) . '" size="10" maxlength="10" />';
         echo '<br><br>';
-        echo esc_html__( 'Enter date in the form mm/dd/yyyy.  Leave empty to allow perpetual sales.' );
+        echo esc_html__( 'Enter date in the form mm/dd/yyyy.  Leave empty to allow perpetual sales.', 'available-through' );
 
         if ( !$this->is_product_purchaseable( $product->ID ) ) {
             echo '<br><br>';
-            echo esc_html__( 'Note: Sales of this product have ended.' );
+            echo esc_html__( 'Note: Sales of this product have ended.', 'available-through' );
         }
     }
     
