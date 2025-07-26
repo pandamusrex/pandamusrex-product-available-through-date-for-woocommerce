@@ -91,17 +91,19 @@ class PandamusRex_Available_Through {
     }
     
     function save_postdata( $product_id ) {
-        if ( ! array_key_exists( 'available_through_nonce', $_POST ) ) {
+        if ( ! isset ( $_POST['available_through_nonce'] ) )
             return $product_id;
-        }
 
-        if ( ! wp_verify_nonce( $_POST['available_through_nonce'], 'available_through-' . $product_id ) ) {
+        $nonce = sanitize_text_field( wp_unslash( $_POST['available_through_nonce'] ) );
+        if ( ! wp_verify_nonce( $nonce, 'available_through-' . $product_id ) )
             return $product_id;
-        }
 
         // verify if this is an auto save routine. If it is our form has not been submitted, so we dont want
         // to do anything
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+            return $product_id;
+
+        if (! isset( $_POST['post_type'] ) )
             return $product_id;
 
         // Check permissions
