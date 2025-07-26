@@ -117,8 +117,8 @@ class PandamusRex_Available_Through {
 
         // OK, we're authenticated: we need to find and save the data
         $user_entered_date = '';
-        if ( array_key_exists( '_available_through_date', $_POST ) ) {
-            $user_entered_date = $_POST['_available_through_date'];
+        if ( isset( $_POST['_available_through_date']) ) {
+            $user_entered_date = sanitize_text_field( wp_unslash( $_POST['_available_through_date'] ) );
         }
 
         if ( empty( $user_entered_date ) ) {
