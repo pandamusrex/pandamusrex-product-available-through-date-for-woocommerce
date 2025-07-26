@@ -127,7 +127,7 @@ class PandamusRex_Available_Through {
             // Attempt to convert user entered date into unix time and then back to mm/dd/yyyy
             $timestamp = strtotime( $user_entered_date );
             if ( $timestamp ) {
-                $available_through_date = strftime( "%m/%d/%Y", $timestamp );
+                $available_through_date = date( "m/d/Y", $timestamp );
                 update_post_meta( $product_id, '_available_through_date', $available_through_date );
             } else {
                 delete_post_meta( $product_id, '_available_through_date' );
