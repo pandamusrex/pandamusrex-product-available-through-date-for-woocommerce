@@ -1,10 +1,10 @@
-=== Available Through ===
+=== PandamusRex Product Available Through Date for WooCommerce ===
 Contributors: pandamusrex
 Donate link: https://pandamusrex.com/
 Tags: woocommerce
 Requires at least: 6.4.3
 Tested up to: 6.8
-Stable tag: 1.1.0
+Stable tag: 1.5.0
 Requires PHP: 7.0
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,6 +22,9 @@ Instruct WooCommerce to stop selling a product on a certain date.
 Yes!
 
 == Changelog ==
+
+= 1.5.0 =
+* Renamed plugin to PandamusRex Product Available Through Date for WooCommerce
 
 = 1.1.0 =
 * Initial release

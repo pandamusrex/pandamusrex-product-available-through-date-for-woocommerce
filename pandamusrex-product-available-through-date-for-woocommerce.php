@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Available Through
- * Version: 1.1.0
- * Plugin URI: https://github.com/pandamusrex/available-through
+ * Plugin Name: PandamusRex Product Available Through Date for WooCommerce
+ * Version: 1.5.0
+ * Plugin URI: https://github.com/pandamusrex/pandamusrex-product-available-through-date-for-woocommerce
  * Description: Disable adding a product to the cart after a date
  * Author: PandamusRex
  * Author URI: https://www.github.com/pandamusrex/
@@ -11,7 +11,7 @@
  * Requires at least: 6.4.3
  * Tested up to: 6.8
  *
- * Text Domain: available-through
+ * Text Domain: pandamusrex-available-through
  * Domain Path: /lang/
  *
  * @package WordPress
@@ -46,25 +46,21 @@ class PandamusRex_Available_Through {
     }
   
     function add_meta_box() {
-        add_meta_box( 'available_through_sectionid', __( 'Available Through', 'available-through' ), array( $this, 'meta_box' ), 'product', 'side', 'high' );
+        add_meta_box( 'available_through_sectionid', __( 'Product Available Through Date', 'pandamusrex-available-through' ), array( $this, 'meta_box' ), 'product', 'side', 'high' );
     }
     
     function is_product_purchaseable( $productID ) {
         $is_purchasable = true;
 
         $available_through_date = get_post_meta( $productID, '_available_through_date', true);
-        # error_log("available through date = $available_through_date");
         if ( !empty( $available_through_date ) ) {
             $wp_tz = wp_timezone_string();
-            # error_log("wp tz string = $wp_tz");
 
             $sale_ends_dt = new DateTime( "$available_through_date 23:59:59", new DateTimeZone( $wp_tz ) );
             $sale_ends_timestamp = (int)( $sale_ends_dt->format( "U" ) );
-            # error_log( "sale_ends_timestamp = $sale_ends_timestamp" );
 
             $current_dt = new DateTime( "now", new DateTimeZone( $wp_tz ) );
             $current_timestamp = (int)( $current_dt->format("U") );
-            # error_log("current_timestamp = $current_timestamp");
 
             if ( $sale_ends_timestamp < $current_timestamp ) {
                 $is_purchasable = false;
@@ -78,15 +74,15 @@ class PandamusRex_Available_Through {
 
         $available_through_date = get_post_meta( $product->ID, '_available_through_date', true);
 
-        echo esc_html__( 'Allow purchasing through', 'available-through' );
+        echo esc_html__( 'Allow purchasing through', 'pandamusrex-available-through' );
         echo '<br><br>';
         echo '<input type="text" id="_available_through_date" name="_available_through_date" value="' . esc_attr( $available_through_date ) . '" size="10" maxlength="10" />';
         echo '<br><br>';
-        echo esc_html__( 'Enter date in the form mm/dd/yyyy.  Leave empty to allow perpetual sales.', 'available-through' );
+        echo esc_html__( 'Enter date in the form mm/dd/yyyy.  Leave empty to allow perpetual sales.', 'pandamusrex-available-through' );
 
         if ( !$this->is_product_purchaseable( $product->ID ) ) {
             echo '<br><br>';
-            echo esc_html__( 'Note: Sales of this product have ended.', 'available-through' );
+            echo esc_html__( 'Note: Sales of this product have ended.', 'pandamusrex-available-through' );
         }
     }
     
