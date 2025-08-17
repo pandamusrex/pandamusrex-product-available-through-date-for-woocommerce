@@ -2,7 +2,7 @@
 Contributors: pandamusrex
 Donate link: https://pandamusrex.com/
 Tags: woocommerce
-Requires at least: 6.4.3
+Requires at least: 6.4
 Tested up to: 6.8
 Stable tag: 1.5.0
 Requires PHP: 7.0

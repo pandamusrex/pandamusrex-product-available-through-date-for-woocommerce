@@ -8,7 +8,8 @@
  * Author URI: https://www.github.com/pandamusrex/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Requires at least: 6.4.3
+ * Requires at least: 6.4
+ * Requires PHP: 7.0
  * Tested up to: 6.8
  *
  * Text Domain: pandamusrex-available-through
