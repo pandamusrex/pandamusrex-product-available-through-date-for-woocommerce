@@ -39,21 +39,21 @@ class PandamusRex_Available_Through {
     public function __wakeup() {}
 
     public function __construct() {
-        add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
-        add_action( 'save_post', array( $this, 'save_postdata' ) );
-        add_filter( 'woocommerce_is_purchasable', array( $this, 'woocommerce_is_purchasable' ), 10, 2 );
-        add_filter( 'woocommerce_variation_is_purchasable', array( $this, 'woocommerce_is_purchasable' ), 10, 2 );
-        add_action( 'template_redirect', array( $this, 'remove_product_from_cart' ) );
+        add_action( 'add_meta_boxes', [ $this, 'add_meta_box' ] );
+        add_action( 'save_post', [ $this, 'save_postdata' ] );
+        add_filter( 'woocommerce_is_purchasable', [ $this, 'woocommerce_is_purchasable' ], 10, 2 );
+        add_filter( 'woocommerce_variation_is_purchasable', [ $this, 'woocommerce_is_purchasable' ], 10, 2 );
+        add_action( 'template_redirect', [ $this, 'remove_product_from_cart' ] );
     }
   
-    function add_meta_box() {
+    public function add_meta_box() {
         add_meta_box( 'available_through_sectionid', __( 'Product Available Through Date', 'pandamusrex-available-through' ), array( $this, 'meta_box' ), 'product', 'side', 'high' );
     }
     
-    function is_product_purchaseable( $productID ) {
+    public function is_product_purchaseable( $productID ) {
         $is_purchasable = true;
 
-        $available_through_date = get_post_meta( $productID, '_available_through_date', true);
+        $available_through_date = get_post_meta( $productID, '_available_through_date', true );
         if ( !empty( $available_through_date ) ) {
             $wp_tz = wp_timezone_string();
 
@@ -61,7 +61,7 @@ class PandamusRex_Available_Through {
             $sale_ends_timestamp = (int)( $sale_ends_dt->format( "U" ) );
 
             $current_dt = new DateTime( "now", new DateTimeZone( $wp_tz ) );
-            $current_timestamp = (int)( $current_dt->format("U") );
+            $current_timestamp = (int)( $current_dt->format( "U" ) );
 
             if ( $sale_ends_timestamp < $current_timestamp ) {
                 $is_purchasable = false;
@@ -70,10 +70,10 @@ class PandamusRex_Available_Through {
         return $is_purchasable;
     }
 
-    function meta_box( $product ) {
+    public function meta_box( $product ) {
         echo '<input type="hidden" name="available_through_nonce" id="available_through_nonce" value="' . esc_attr( wp_create_nonce( 'available_through-' . $product->ID ) ) . '" />';
 
-        $available_through_date = get_post_meta( $product->ID, '_available_through_date', true);
+        $available_through_date = get_post_meta( $product->ID, '_available_through_date', true );
 
         echo esc_html__( 'Allow purchasing through', 'pandamusrex-available-through' );
         echo '<br><br>';
@@ -87,11 +87,11 @@ class PandamusRex_Available_Through {
         }
     }
     
-    function save_postdata( $product_id ) {
-        if ( ! isset ( $_POST['available_through_nonce'] ) )
+    public function save_postdata( $product_id ) {
+        if ( ! isset ( $_POST[ 'available_through_nonce' ] ) )
             return $product_id;
 
-        $nonce = sanitize_text_field( wp_unslash( $_POST['available_through_nonce'] ) );
+        $nonce = sanitize_text_field( wp_unslash( $_POST[ 'available_through_nonce' ] ) );
         if ( ! wp_verify_nonce( $nonce, 'available_through-' . $product_id ) )
             return $product_id;
 
@@ -100,11 +100,11 @@ class PandamusRex_Available_Through {
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
             return $product_id;
 
-        if (! isset( $_POST['post_type'] ) )
+        if (! isset( $_POST[ 'post_type' ] ) )
             return $product_id;
 
         // Check permissions
-        if ( 'page' == $_POST['post_type'] ) {
+        if ( 'page' == $_POST[ 'post_type' ] ) {
             if ( ! current_user_can( 'edit_page', $product_id ) )
                 return $product_id;
         } else {
@@ -114,8 +114,8 @@ class PandamusRex_Available_Through {
 
         // OK, we're authenticated: we need to find and save the data
         $user_entered_date = '';
-        if ( isset( $_POST['_available_through_date']) ) {
-            $user_entered_date = sanitize_text_field( wp_unslash( $_POST['_available_through_date'] ) );
+        if ( isset( $_POST[ '_available_through_date' ]) ) {
+            $user_entered_date = sanitize_text_field( wp_unslash( $_POST[ '_available_through_date' ] ) );
         }
 
         if ( empty( $user_entered_date ) ) {
@@ -134,8 +134,8 @@ class PandamusRex_Available_Through {
         return $product_id;
     }
 
-    function woocommerce_is_purchasable( $is_purchasable, $product ) {
-        if ( $product->is_type('variation') ) {
+    public function woocommerce_is_purchasable( $is_purchasable, $product ) {
+        if ( $product->is_type( 'variation' ) ) {
             $product_id = $product->get_parent_id();
         } else {
             $product_id = $product->get_id();
@@ -148,7 +148,7 @@ class PandamusRex_Available_Through {
     }
 
     // Inspired by https://www.sitepoint.com/woocommerce-actions-and-filters-manipulate-cart/
-    function remove_product_from_cart() {
+    public function remove_product_from_cart() {
         if ( ! function_exists( 'is_cart' ) ) {
             return;
         }
@@ -163,14 +163,14 @@ class PandamusRex_Available_Through {
             foreach ( WC()->cart->cart_contents as $prod_in_cart ) {
                 // Handle simple products and variable products appropriately
                 // Get the Variation or Product ID
-                $is_variation = ( isset( $prod_in_cart['variation_id'] ) && $prod_in_cart['variation_id'] != 0 );
-                $product_id = $is_variation ? $prod_in_cart['variation_id'] : $prod_in_cart['product_id'];
-                $product_id = $prod_in_cart['product_id'];
+                $is_variation = ( isset( $prod_in_cart[ 'variation_id' ] ) && $prod_in_cart[ 'variation_id' ] != 0 );
+                $product_id = $is_variation ? $prod_in_cart[ 'variation_id' ] : $prod_in_cart[ 'product_id' ];
+                $product_id = $prod_in_cart[ 'product_id' ];
                 if ( !$this->is_product_purchaseable( $product_id )) {
                     // Get it's unique ID within the Cart
                     $prod_unique_id = WC()->cart->generate_cart_id( $product_id );
                     // Remove it from the cart by un-setting it
-                    unset( WC()->cart->cart_contents[$prod_unique_id] );
+                    unset( WC()->cart->cart_contents[ $prod_unique_id ] );
                 }
             }
         }
